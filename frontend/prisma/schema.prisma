@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// schema.prisma
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id             String    @id @default(cuid())
+  name           String?
+  email          String    @unique
+  emailVerified  DateTime?
+  hashedPassword String?
+  image          String?
+  accounts       Account[]
+  sessions       Session[]
+  pins           Pin[]
+  created_at     DateTime  @default(now())
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Pin {
+  pin_id      Int      @id @default(autoincrement())
+  user_id     String
+  latitude    Decimal  @db.Decimal(10, 8)
+  longitude   Decimal  @db.Decimal(11, 8)
+  description String?
+  created_at  DateTime @default(now())
+  user        User     @relation(fields: [user_id], references: [id])
+  photos      Photo[]
+
+  @@index([latitude, longitude])
+  @@map(name: "pins")
+}
+
+model Photo {
+  photo_id         Int                @id @default(autoincrement())
+  pin_id           Int
+  url              String
+  created_at       DateTime           @default(now())
+  pin              Pin                @relation(fields: [pin_id], references: [pin_id])
+  metadata         Json? // JSONB for PostgreSQL, adjust for your database system
+  LocationMetadata LocationMetadata[]
+}
+
+model LocationMetadata {
+  photo_id  Int
+  latitude  Decimal @db.Decimal(10, 8)
+  longitude Decimal @db.Decimal(11, 8)
+  metadata  Json
+  photo     Photo   @relation(fields: [photo_id], references: [photo_id])
+
+  @@id([photo_id, latitude, longitude])
+}
