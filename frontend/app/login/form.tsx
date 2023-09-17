@@ -15,7 +15,7 @@ export const LoginForm = () => {
   });
   const [error, setError] = useState('');
 
-  const callbackUrl = '/my-map';
+  const callbackUrl = '/';
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +32,6 @@ export const LoginForm = () => {
 
       setLoading(false);
 
-      console.log(res);
       if (!res?.error) {
         router.push(callbackUrl);
       } else {
