@@ -9,16 +9,23 @@ import {
   NavbarMenu,
   NavbarMenuItem,
 } from '@nextui-org/navbar';
+import { useSession } from 'next-auth/react';
 import { Link } from '@nextui-org/link';
 import { Button } from '@nextui-org/button';
 import Image from 'next/image';
 import logo from '../../public/logo.png';
 import { useState } from 'react';
+import { signOut } from 'next-auth/react';
+import router from 'next/router';
 
-export default function App() {
+export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: session, status } = useSession();
+  console.log('navbar session', session);
+  console.log('navbar status', status);
 
   const menuItems = [
+    //TODO: add actual menu items
     'Profile',
     'Dashboard',
     'Activity',
@@ -30,44 +37,28 @@ export default function App() {
     'Help & Feedback',
     'Log Out',
   ];
-
+  async function handleSignOut() {
+    await signOut();
+    router.push('/');
+  }
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent>
         <NavbarMenuToggle aria-label={isMenuOpen ? 'Close menu' : 'Open menu'} className="sm:hidden" />
         <NavbarBrand>
-          <Image src={logo} alt="Logo" width={50} height={50} />
-          <p className="font-bold text-inherit">ACME</p>
+          <Image priority src={logo} alt="Logo" width={50} height={50} />
+          <p className="font-bold text-inherit uppercase text-white">I've been there</p>
         </NavbarBrand>
       </NavbarContent>
-
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Features
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="#" aria-current="page">
-            Customers
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Integrations
-          </Link>
-        </NavbarItem>
-      </NavbarContent>
-      <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
-      </NavbarContent>
+      {status === 'authenticated' && (
+        <NavbarContent justify="end">
+          <NavbarItem>
+            <Button onClick={handleSignOut} color="primary" variant="flat">
+              Log out
+            </Button>
+          </NavbarItem>
+        </NavbarContent>
+      )}
       <NavbarMenu>
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
