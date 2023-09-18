@@ -46,7 +46,9 @@ export default function NavBar() {
       <NavbarContent>
         <NavbarMenuToggle aria-label={isMenuOpen ? 'Close menu' : 'Open menu'} className="sm:hidden" />
         <NavbarBrand>
-          <Image priority src={logo} alt="Logo" width={50} height={50} />
+          <Link href="/">
+            <Image priority src={logo} alt="Logo" width={50} height={50} />
+          </Link>
           <p className="font-bold text-inherit uppercase text-white">I've been there</p>
         </NavbarBrand>
       </NavbarContent>

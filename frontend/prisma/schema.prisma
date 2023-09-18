@@ -47,7 +47,7 @@ model User {
   image          String?
   accounts       Account[]
   sessions       Session[]
-  pins           Pin[]
+  markers        Marker[]
   created_at     DateTime  @default(now())
 }
 
@@ -59,34 +59,33 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Pin {
-  pin_id      Int      @id @default(autoincrement())
+model Marker {
+  marker_id   String   @id @default(cuid())
   user_id     String
-  latitude    Decimal  @db.Decimal(10, 8)
-  longitude   Decimal  @db.Decimal(11, 8)
+  latitude    Decimal  @db.Decimal(6, 5)
+  longitude   Decimal  @db.Decimal(6, 5)
   description String?
   created_at  DateTime @default(now())
   user        User     @relation(fields: [user_id], references: [id])
   photos      Photo[]
 
   @@index([latitude, longitude])
-  @@map(name: "pins")
 }
 
 model Photo {
-  photo_id         Int                @id @default(autoincrement())
-  pin_id           Int
+  photo_id         String             @id @default(cuid())
+  marker_id        String
   url              String
   created_at       DateTime           @default(now())
-  pin              Pin                @relation(fields: [pin_id], references: [pin_id])
+  marker           Marker             @relation(fields: [marker_id], references: [marker_id])
   metadata         Json? // JSONB for PostgreSQL, adjust for your database system
   LocationMetadata LocationMetadata[]
 }
 
 model LocationMetadata {
-  photo_id  Int
-  latitude  Decimal @db.Decimal(10, 8)
-  longitude Decimal @db.Decimal(11, 8)
+  photo_id  String
+  latitude  Decimal @db.Decimal(6, 5)
+  longitude Decimal @db.Decimal(6, 5)
   metadata  Json
   photo     Photo   @relation(fields: [photo_id], references: [photo_id])
 

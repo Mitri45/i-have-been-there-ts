@@ -14,7 +14,22 @@ async function main() {
       hashedPassword: password,
     },
   });
-  console.log({ user });
+  const markers = await prisma.marker.createMany({
+    data: [
+      {
+        latitude: -36.848461,
+        longitude: 174.763336,
+        description: 'Auckland is the largest city in New Zealand.',
+        user_id: 'clmk38rge0000bntgpg5370l4',
+      },
+      {
+        latitude: -41.295216275932106,
+        longitude: 174.77494459959325,
+        description: 'Some marker in Wellington.',
+        user_id: 'clmk38rge0000bntgpg5370l4',
+      },
+    ],
+  });
 }
 main()
   .then(() => prisma.$disconnect())
