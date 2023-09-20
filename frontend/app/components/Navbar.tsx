@@ -49,7 +49,7 @@ export default function NavBar() {
           <Link href="/">
             <Image priority src={logo} alt="Logo" width={50} height={50} />
           </Link>
-          <p className="font-bold text-inherit uppercase text-white">I've been there</p>
+          <p className="font-bold text-inherit uppercase text-white">I have been there</p>
         </NavbarBrand>
       </NavbarContent>
       {status === 'authenticated' && (
