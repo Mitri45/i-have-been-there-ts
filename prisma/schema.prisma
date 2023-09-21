@@ -62,8 +62,8 @@ model VerificationToken {
 model Marker {
   marker_id   String   @id @default(cuid())
   user_id     String
-  latitude    Decimal  @db.Decimal(6, 5)
-  longitude   Decimal  @db.Decimal(6, 5)
+  latitude    Decimal  @db.Decimal(20, 7)
+  longitude   Decimal  @db.Decimal(20, 7)
   description String?
   created_at  DateTime @default(now())
   user        User     @relation(fields: [user_id], references: [id])
@@ -84,8 +84,8 @@ model Photo {
 
 model LocationMetadata {
   photo_id  String
-  latitude  Decimal @db.Decimal(6, 5)
-  longitude Decimal @db.Decimal(6, 5)
+  latitude  Decimal @db.Decimal(17, 17)
+  longitude Decimal @db.Decimal(17, 17)
   metadata  Json
   photo     Photo   @relation(fields: [photo_id], references: [photo_id])
 

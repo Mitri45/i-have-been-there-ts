@@ -42,8 +42,8 @@ export default function NavBar() {
     router.push('/');
   }
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen}>
-      <NavbarContent>
+    <Navbar className="bg-primary justify-between" onMenuOpenChange={setIsMenuOpen}>
+      <NavbarContent justify="start">
         <NavbarMenuToggle aria-label={isMenuOpen ? 'Close menu' : 'Open menu'} className="sm:hidden" />
         <NavbarBrand>
           <Link href="/">
@@ -55,7 +55,7 @@ export default function NavBar() {
       {status === 'authenticated' && (
         <NavbarContent justify="end">
           <NavbarItem>
-            <Button onClick={handleSignOut} color="primary" variant="flat">
+            <Button onClick={handleSignOut} color="secondary" variant="flat">
               Log out
             </Button>
           </NavbarItem>
